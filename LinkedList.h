@@ -65,7 +65,7 @@ public:
 	void SetNext(Node* input) {
 		Next = input;
 	};
-	void SetPrev(Node* input) {
+	void SetPrevious(Node* input) {
 		Previous = input;
 	};
 	void SetData(T input) {
@@ -142,6 +142,7 @@ public:
 		if (size == 0) {
 			newNode = new Node<T>(newData);
 			First = newNode;
+			Last = newNode;
 			size++;
 		}
 		else {
@@ -165,6 +166,7 @@ public:
 			else {
 				delete First;
 				First = nullptr;
+				Last = nullptr;
 			}
 
 			size--;
@@ -187,23 +189,54 @@ template <class T>
 class Priority_Queue : Linked_List<T> {
 
 	Priority_Queue() {
-		this.First = nullptr;
-		this.Last = nullptr;
-		this.size = 0;
+		this->First = nullptr;
+		this->Last = nullptr;
+		this->size = 0;
 	};
 	~Priority_Queue() {
-		while (this.size > 0) { // delete them nodes
-			this.Pop();
+		while (this->size > 0) { // delete them nodes
+			this->Pop();
 		}
 	};
 
 	void Push(T newData, int prio) {
-		if (this.size == 0) {
-			this.First = new Node<T>(newData, prio);
-			size++;
+		Node<T>* newNode;
+		newNode = new Node<T>(newData, prio);
+
+		if (this->size == 0) {
+			this->First = newNode;
+			this->Last = newNode;
+			this->size++;
 		}
 		else {
+			this->it.SetCurrent(this->First);
+			this->it.SetPosition(0);
 
+			int i = 0;
+
+			while (i < size) {
+				if (this->it.GetCurrent()->GetPriority() >= prio) {
+					if (this->it.GetCurrent().GetPrevious() == nullptr) {
+						newNode = this->First;
+					}
+					else {
+						this->it.GetCurrent().GetPrevious().SetNext(newNode);
+					}
+					newNode->SetPrevious(this->it.GetCurrent().GetPrevious());
+					newNode->SetNext(this->it.GetCurrent());
+					this->it.GetCurrent().SetPrevious(newNode);
+					size++;
+
+					return;
+				}
+				i++
+			}
+
+			this->Last->SetNext(newNode);
+			newNode->SetPrevious(this->Last);
+			this->Last = newNode;
+			size++;
+			return;
 		}
 	};
 };

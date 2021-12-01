@@ -6,6 +6,8 @@ int main(void) {
 
 	Linked_List<int> TestIntList;
 
+	Priority_Queue<int> TestIntPrio;
+
 	TestIntList.Pop();
 
 	TestIntList.Push(20);
@@ -19,6 +21,8 @@ int main(void) {
 	cout << TestIntList.Pop() << endl;
 	cout << TestIntList.Pop() << endl;
 	//this is testing the linked list part
+
+	cout << "testing prio now." << endl;
 
 	system("PAUSE");
 
