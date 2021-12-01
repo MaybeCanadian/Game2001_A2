@@ -128,14 +128,24 @@ public:
 		Last = nullptr;
 	};
 	~Linked_List() {
-		while (size > 0) { // delete them nodes
-			Pop();
+
+		cout << "oof" << endl;
+		system("PAUSE");
+
+		Node<T>* NextNode;
+		while (First != nullptr) {
+			NextNode = First->GetNext();
+			delete First;
+			First = NextNode;
 		}
+
+		cout << "this worked fine" << endl;
+		system("PAUSE");
 	};
 
-	const Iter<T>* GetIterator() {
-		return &it;
-	};
+	int GetSize() {
+		return size;
+	}
 
 	void Push(T newData) {
 		Node<T>* newNode;
@@ -147,7 +157,7 @@ public:
 		}
 		else {
 			newNode = new Node<T>(newData, First);
-			First->SetPrev(newNode);
+			First->SetPrevious(newNode);
 			First = newNode;
 			size++;
 		}
@@ -186,19 +196,12 @@ public:
 };
 
 template <class T> 
-class Priority_Queue : Linked_List<T> {
+class Priority_Queue : public Linked_List<T> {
+public:
 
-	Priority_Queue() {
-		this->First = nullptr;
-		this->Last = nullptr;
-		this->size = 0;
-	};
-	~Priority_Queue() {
-		while (this->size > 0) { // delete them nodes
-			this->Pop();
-		}
-	};
-
+	void Push(T newData) {
+		cout << "error, no priority stated" << endl;
+	}
 	void Push(T newData, int prio) {
 		Node<T>* newNode;
 		newNode = new Node<T>(newData, prio);
@@ -214,28 +217,27 @@ class Priority_Queue : Linked_List<T> {
 
 			int i = 0;
 
-			while (i < size) {
+			while (i < this->size) {
 				if (this->it.GetCurrent()->GetPriority() >= prio) {
-					if (this->it.GetCurrent().GetPrevious() == nullptr) {
-						newNode = this->First;
+					if (this->it.GetCurrent()->GetPrevious() == nullptr) {
+						this->First = newNode;
 					}
 					else {
-						this->it.GetCurrent().GetPrevious().SetNext(newNode);
+						this->it.GetCurrent()->GetPrevious()->SetNext(newNode);
 					}
-					newNode->SetPrevious(this->it.GetCurrent().GetPrevious());
+					newNode->SetPrevious(this->it.GetCurrent()->GetPrevious());
 					newNode->SetNext(this->it.GetCurrent());
-					this->it.GetCurrent().SetPrevious(newNode);
-					size++;
-
+					this->it.GetCurrent()->SetPrevious(newNode);
+					this->size++;
 					return;
 				}
-				i++
+				i++;
 			}
 
 			this->Last->SetNext(newNode);
 			newNode->SetPrevious(this->Last);
 			this->Last = newNode;
-			size++;
+			this->size++;
 			return;
 		}
 	};
