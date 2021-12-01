@@ -215,12 +215,11 @@ public:
 			this->it.SetCurrent(this->First);
 			this->it.SetPosition(0);
 
-			int i = 0;
-
-			while (i < this->size) {
+			while(this->it.GetCurrent() != nullptr) {
 				if (this->it.GetCurrent()->GetPriority() >= prio) {
 					if (this->it.GetCurrent()->GetPrevious() == nullptr) {
 						this->First = newNode;
+						newNode->SetPrevious(nullptr);
 					}
 					else {
 						this->it.GetCurrent()->GetPrevious()->SetNext(newNode);
@@ -231,11 +230,12 @@ public:
 					this->size++;
 					return;
 				}
-				i++;
+				this->it.Iterate(this->it.GetCurrent()->GetNext());
 			}
 
 			this->Last->SetNext(newNode);
 			newNode->SetPrevious(this->Last);
+			newNode->SetNext(nullptr);
 			this->Last = newNode;
 			this->size++;
 			return;
